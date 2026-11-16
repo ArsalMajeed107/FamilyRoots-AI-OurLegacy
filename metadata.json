@@ -1,0 +1,8 @@
+{
+  "name": "FamilyRoots AI — OurLegacy",
+  "description": "A smart family registration, multigenerational genealogy, 3D lineage visualization, and AI assistance platform preserving family history across generations.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

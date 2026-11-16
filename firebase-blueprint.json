@@ -1,0 +1,359 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Authenticated user account metadata and UI preferences without PII.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "displayName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "role": { "type": "string", "enum": ["member", "admin"] },
+        "linkedMemberId": { "type": "string", "maxLength": 128 },
+        "themePreference": { "type": "string", "enum": ["light", "dark"] },
+        "preferredLanguage": { "type": "string", "enum": ["en", "ur", "roman_ur"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "displayName", "role", "linkedMemberId", "themePreference", "preferredLanguage", "createdAt", "updatedAt"]
+    },
+    "UserPrivateContact": {
+      "title": "UserPrivateContact",
+      "description": "Isolated PII contact details strictly readable by owner or admin.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "email": { "type": "string", "maxLength": 160 },
+        "phone": { "type": "string", "maxLength": 40 },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "phone", "updatedAt"]
+    },
+    "AdminMarker": {
+      "title": "AdminMarker",
+      "description": "Trusted super-admin role assignment document.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "grantedByUid": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "grantedByUid", "createdAt"]
+    },
+    "BranchAdminMarker": {
+      "title": "BranchAdminMarker",
+      "description": "Branch-scoped administrator assignment granted by the Main Family Head or Super Admin.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "email": { "type": "string", "maxLength": 160 },
+        "branchId": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "branchName": { "type": "string", "maxLength": 120 },
+        "grantedByUid": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "branchId", "branchName", "grantedByUid", "createdAt"]
+    },
+    "FamilyBranch": {
+      "title": "FamilyBranch",
+      "description": "A distinct family branch originating from verified lineage nodes.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "name": { "type": "string", "minLength": 2, "maxLength": 120 },
+        "description": { "type": "string", "maxLength": 600 },
+        "originLocation": { "type": "string", "maxLength": 160 },
+        "founderPairLabel": { "type": "string", "maxLength": 200 },
+        "visibility": { "type": "string", "enum": ["family"] },
+        "createdByUid": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "name", "description", "originLocation", "founderPairLabel", "visibility", "createdByUid", "createdAt", "updatedAt"]
+    },
+    "FamilyMember": {
+      "title": "FamilyMember",
+      "description": "Verified family member genealogy node with explicit parent and spouse links.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "uid": { "type": "string", "maxLength": 128 },
+        "fullName": { "type": "string", "minLength": 2, "maxLength": 120 },
+        "gender": { "type": "string", "enum": ["male", "female", "other"] },
+        "dateOfBirth": { "type": "string", "maxLength": 32 },
+        "isDeceased": { "type": "boolean" },
+        "deathDate": { "type": "string", "maxLength": 32 },
+        "generation": { "type": "integer" },
+        "branchId": { "type": "string", "maxLength": 128 },
+        "branchName": { "type": "string", "maxLength": 120 },
+        "fatherId": { "type": "string", "maxLength": 128 },
+        "motherId": { "type": "string", "maxLength": 128 },
+        "spouseId": { "type": "string", "maxLength": 128 },
+        "fatherNameText": { "type": "string", "maxLength": 120 },
+        "motherNameText": { "type": "string", "maxLength": 120 },
+        "roleInLineage": { "type": "string", "enum": ["founder", "descendant", "spouse"] },
+        "isFamilyHead": { "type": "boolean" },
+        "biography": { "type": "string", "maxLength": 2000 },
+        "photoUrl": { "type": "string", "maxLength": 250000 },
+        "visibility": { "type": "string", "enum": ["family"] },
+        "isVerified": { "type": "boolean" },
+        "createdByUid": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "id", "uid", "fullName", "gender", "dateOfBirth", "isDeceased", "deathDate",
+        "generation", "branchId", "branchName", "fatherId", "motherId", "spouseId",
+        "fatherNameText", "motherNameText", "roleInLineage", "biography", "photoUrl",
+        "visibility", "isVerified", "createdByUid", "createdAt", "updatedAt"
+      ]
+    },
+    "MemberInvite": {
+      "title": "MemberInvite",
+      "description": "Isolated invitation record allowing a Family Head-created member to claim their login account.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "memberId": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "memberName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "branchId": { "type": "string", "maxLength": 128 },
+        "invitedEmail": { "type": "string", "maxLength": 160 },
+        "status": { "type": "string", "enum": ["pending", "claimed"] },
+        "claimedByUid": { "type": "string", "maxLength": 128 },
+        "createdByUid": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "memberId", "memberName", "branchId", "invitedEmail", "status", "claimedByUid", "createdByUid", "createdAt", "updatedAt"]
+    },
+    "PublicStats": {
+      "title": "PublicStats",
+      "description": "Non-PII public homepage counters and Main Family Head showcase summary.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 32 },
+        "totalMembers": { "type": "integer" },
+        "totalGenerations": { "type": "integer" },
+        "totalBranches": { "type": "integer" },
+        "familyHeadMemberId": { "type": "string", "maxLength": 128 },
+        "familyHeadName": { "type": "string", "maxLength": 120 },
+        "familyHeadTitle": { "type": "string", "maxLength": 160 },
+        "familyHeadBranch": { "type": "string", "maxLength": 120 },
+        "familyHeadOrigin": { "type": "string", "maxLength": 160 },
+        "familyHeadBio": { "type": "string", "maxLength": 600 },
+        "familyHeadPhotoUrl": { "type": "string", "maxLength": 250000 },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "id", "totalMembers", "totalGenerations", "totalBranches", "familyHeadMemberId",
+        "familyHeadName", "familyHeadTitle", "familyHeadBranch", "familyHeadOrigin",
+        "familyHeadBio", "familyHeadPhotoUrl", "updatedAt"
+      ]
+    },
+    "RegistrationRequest": {
+      "title": "RegistrationRequest",
+      "description": "Member registration submission awaiting administrator verification.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "applicantUid": { "type": "string", "maxLength": 128 },
+        "fullName": { "type": "string", "minLength": 2, "maxLength": 120 },
+        "email": { "type": "string", "maxLength": 160 },
+        "phone": { "type": "string", "maxLength": 40 },
+        "gender": { "type": "string", "enum": ["male", "female", "other"] },
+        "dateOfBirth": { "type": "string", "maxLength": 32 },
+        "fatherNameText": { "type": "string", "maxLength": 120 },
+        "motherNameText": { "type": "string", "maxLength": 120 },
+        "requestedFatherId": { "type": "string", "maxLength": 128 },
+        "requestedMotherId": { "type": "string", "maxLength": 128 },
+        "requestedSpouseId": { "type": "string", "maxLength": 128 },
+        "registrationType": { "type": "string", "enum": ["new_branch", "join_branch"] },
+        "branchId": { "type": "string", "maxLength": 128 },
+        "newBranchName": { "type": "string", "maxLength": 120 },
+        "photoUrl": { "type": "string", "maxLength": 250000 },
+        "biography": { "type": "string", "maxLength": 2000 },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected"] },
+        "reviewNote": { "type": "string", "maxLength": 600 },
+        "duplicateMatchIds": { "type": "array" },
+        "reviewedByUid": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "id", "applicantUid", "fullName", "email", "phone", "gender", "dateOfBirth",
+        "fatherNameText", "motherNameText", "requestedFatherId", "requestedMotherId",
+        "requestedSpouseId", "registrationType", "branchId", "newBranchName", "photoUrl",
+        "biography", "status", "reviewNote", "duplicateMatchIds", "reviewedByUid",
+        "createdAt", "updatedAt"
+      ]
+    },
+    "RelationshipProposal": {
+      "title": "RelationshipProposal",
+      "description": "Explicitly proposed parent-child or marital link awaiting admin verification.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "fromMemberId": { "type": "string", "maxLength": 128 },
+        "toMemberId": { "type": "string", "maxLength": 128 },
+        "relationType": { "type": "string", "enum": ["father", "mother", "spouse"] },
+        "notes": { "type": "string", "maxLength": 400 },
+        "proposedByUid": { "type": "string", "maxLength": 128 },
+        "status": { "type": "string", "enum": ["pending", "verified", "rejected"] },
+        "verifiedByUid": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "fromMemberId", "toMemberId", "relationType", "notes", "proposedByUid", "status", "verifiedByUid", "createdAt", "updatedAt"]
+    },
+    "FamilyStory": {
+      "title": "FamilyStory",
+      "description": "Historical family narrative and generational memory.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "title": { "type": "string", "minLength": 2, "maxLength": 160 },
+        "eraYear": { "type": "string", "maxLength": 32 },
+        "branchId": { "type": "string", "maxLength": 128 },
+        "content": { "type": "string", "minLength": 5, "maxLength": 4000 },
+        "coverImageUrl": { "type": "string", "maxLength": 250000 },
+        "visibility": { "type": "string", "enum": ["family"] },
+        "authorUid": { "type": "string", "maxLength": 128 },
+        "authorName": { "type": "string", "maxLength": 120 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "title", "eraYear", "branchId", "content", "coverImageUrl", "visibility", "authorUid", "authorName", "createdAt", "updatedAt"]
+    },
+    "FamilyPhoto": {
+      "title": "FamilyPhoto",
+      "description": "Archived family photograph in the shared gallery.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "title": { "type": "string", "minLength": 2, "maxLength": 140 },
+        "caption": { "type": "string", "maxLength": 500 },
+        "yearTaken": { "type": "string", "maxLength": 16 },
+        "branchId": { "type": "string", "maxLength": 128 },
+        "imageUrl": { "type": "string", "maxLength": 350000 },
+        "visibility": { "type": "string", "enum": ["family"] },
+        "uploadedByUid": { "type": "string", "maxLength": 128 },
+        "uploadedByName": { "type": "string", "maxLength": 120 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "title", "caption", "yearTaken", "branchId", "imageUrl", "visibility", "uploadedByUid", "uploadedByName", "createdAt"]
+    },
+    "FamilyEvent": {
+      "title": "FamilyEvent",
+      "description": "Family reunion, milestone, or official announcement.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "title": { "type": "string", "minLength": 2, "maxLength": 160 },
+        "eventType": { "type": "string", "enum": ["announcement", "reunion", "milestone", "memorial"] },
+        "eventDate": { "type": "string", "maxLength": 32 },
+        "location": { "type": "string", "maxLength": 160 },
+        "description": { "type": "string", "maxLength": 1000 },
+        "branchId": { "type": "string", "maxLength": 128 },
+        "visibility": { "type": "string", "enum": ["family"] },
+        "authorUid": { "type": "string", "maxLength": 128 },
+        "authorName": { "type": "string", "maxLength": 120 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "title", "eventType", "eventDate", "location", "description", "branchId", "visibility", "authorUid", "authorName", "createdAt"]
+    },
+    "AdminActivityLog": {
+      "title": "AdminActivityLog",
+      "description": "Immutable audit log of administrator actions.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "adminUid": { "type": "string", "maxLength": 128 },
+        "adminEmail": { "type": "string", "maxLength": 160 },
+        "action": { "type": "string", "maxLength": 100 },
+        "targetType": { "type": "string", "maxLength": 60 },
+        "targetId": { "type": "string", "maxLength": 128 },
+        "summary": { "type": "string", "maxLength": 500 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "adminUid", "adminEmail", "action", "targetType", "targetId", "summary", "createdAt"]
+    },
+    "SupportEscalation": {
+      "title": "SupportEscalation",
+      "description": "Complex registration or lineage case escalated from FamilyGuide AI to an Admin.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userUid": { "type": "string", "maxLength": 128 },
+        "userName": { "type": "string", "maxLength": 120 },
+        "topic": { "type": "string", "maxLength": 160 },
+        "conversationSummary": { "type": "string", "maxLength": 2000 },
+        "status": { "type": "string", "enum": ["open", "resolved"] },
+        "adminResponse": { "type": "string", "maxLength": 1000 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userUid", "userName", "topic", "conversationSummary", "status", "adminResponse", "createdAt", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/users/{uid}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "User account preferences and linked family member ID."
+    },
+    "/users/{uid}/private/contact": {
+      "schema": { "$ref": "#/entities/UserPrivateContact" },
+      "description": "Owner/Admin-only PII contact information."
+    },
+    "/admins/{uid}": {
+      "schema": { "$ref": "#/entities/AdminMarker" },
+      "description": "Explicit super-administrator privileges."
+    },
+    "/branchAdmins/{uid}": {
+      "schema": { "$ref": "#/entities/BranchAdminMarker" },
+      "description": "Branch-scoped administrator assignments."
+    },
+    "/branches/{branchId}": {
+      "schema": { "$ref": "#/entities/FamilyBranch" },
+      "description": "Verified family branches."
+    },
+    "/members/{memberId}": {
+      "schema": { "$ref": "#/entities/FamilyMember" },
+      "description": "Verified multigenerational family member nodes."
+    },
+    "/memberInvites/{memberId}": {
+      "schema": { "$ref": "#/entities/MemberInvite" },
+      "description": "Isolated invitation emails for Family Head-created members to claim their account."
+    },
+    "/publicStats/{docId}": {
+      "schema": { "$ref": "#/entities/PublicStats" },
+      "description": "Non-PII public homepage counters and Main Family Head summary."
+    },
+    "/registrations/{registrationId}": {
+      "schema": { "$ref": "#/entities/RegistrationRequest" },
+      "description": "Pending, approved, and rejected registration applications."
+    },
+    "/relationships/{relationshipId}": {
+      "schema": { "$ref": "#/entities/RelationshipProposal" },
+      "description": "Proposed parent-child and marital links awaiting verification."
+    },
+    "/stories/{storyId}": {
+      "schema": { "$ref": "#/entities/FamilyStory" },
+      "description": "Family history narratives."
+    },
+    "/gallery/{photoId}": {
+      "schema": { "$ref": "#/entities/FamilyPhoto" },
+      "description": "Family photo gallery records."
+    },
+    "/events/{eventId}": {
+      "schema": { "$ref": "#/entities/FamilyEvent" },
+      "description": "Family events and announcements."
+    },
+    "/adminLogs/{logId}": {
+      "schema": { "$ref": "#/entities/AdminActivityLog" },
+      "description": "Immutable admin audit logs."
+    },
+    "/escalations/{escalationId}": {
+      "schema": { "$ref": "#/entities/SupportEscalation" },
+      "description": "AI-escalated support cases for administrator review."
+    }
+  }
+}

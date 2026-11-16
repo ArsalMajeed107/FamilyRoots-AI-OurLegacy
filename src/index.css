@@ -1,0 +1,93 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  :root {
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+  }
+
+  body {
+    font-family: var(--font-sans);
+  }
+
+  h1, h2, .font-display {
+    font-family: var(--font-display);
+  }
+
+  .font-mono, .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@keyframes lineageFlow {
+  0% {
+    stroke-dashoffset: 360;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes lineageGlow {
+  0%, 100% {
+    opacity: 0.32;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.68;
+    transform: scale(1.04);
+  }
+}
+
+@keyframes heritageDrift {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(0, -10px, 0) scale(1.015);
+  }
+}
+
+.animate-lineage-flow {
+  stroke-dasharray: 12 18;
+  animation: lineageFlow 16s linear infinite;
+}
+
+.animate-lineage-flow-slow {
+  stroke-dasharray: 16 24;
+  animation: lineageFlow 24s linear infinite reverse;
+}
+
+.animate-lineage-glow {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: lineageGlow 7s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+.animate-heritage-drift {
+  animation: heritageDrift 26s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-lineage-flow,
+  .animate-lineage-flow-slow,
+  .animate-lineage-glow,
+  .animate-heritage-drift {
+    animation: none !important;
+  }
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+  body {
+    background: #ffffff !important;
+    color: #0F2342 !important;
+  }
+}
